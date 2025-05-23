@@ -24,15 +24,27 @@ app.post("/api/layout", async (req, res) => {
 
     // Helper function to validate fontSize
     const isValidFontSize = (fontSize) => fontSize >= 16 && fontSize <= 30;
+    const isValidFontcat = (fontSize) => fontSize >= 8 && fontSize <= 12;
 
     // Validate fontSize for each component
     if (
-      (cardlayout?.fontSize && !isValidFontSize(cardlayout.fontSize)) ||
-      (category?.fontSize && !isValidFontSize(category.fontSize))
+      cardlayout?.fontSize &&
+      !isValidFontSize(cardlayout.fontSize)
+      // (category?.fontSize && !isValidFontcat(category.fontSize))
     ) {
       return res.status(400).send({
         error: "Validation error",
-        message: "fontSize must be between 16 and 30",
+        message: "Card Layout fontSize must be between 16 and 30",
+      });
+    }
+    if (
+      // (cardlayout?.fontSize && !isValidFontSize(cardlayout.fontSize)) ||
+      category?.fontSize &&
+      !isValidFontcat(category.fontSize)
+    ) {
+      return res.status(400).send({
+        error: "Validation error",
+        message: "Category fontSize must be between 8 and 12",
       });
     }
 
