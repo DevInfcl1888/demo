@@ -20,8 +20,7 @@ const layoutSchema = new mongoose.Schema({
   cardlayout: {
     id: String,
     screen: String,
-    height: Number,
-    width: Number,
+    layout: String,
   },
 });
 
