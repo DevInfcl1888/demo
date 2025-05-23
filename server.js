@@ -10,7 +10,7 @@ const port = 3000;
 app.use(bodyParser.json());
 
 // MongoDB connection
-mongoose.connect("mongodb://localhost:27017/layoutDB", {
+mongoose.connect("mongodb+srv://pundirrahul2001:Rjn58Ch2dzdf2SOD@mydev.svubrpl.mongodb.net/layoutDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
