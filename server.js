@@ -18,21 +18,25 @@ mongoose.connect(
   }
 );
 
-// Routes
-
-// POST - Save layout data
-// app.post("/api/layout", async (req, res) => {
-//   try {
-//     const data = new LayoutData(req.body);
-//     await data.save();
-//     res.status(201).send({ message: "Data saved", data });
-//   } catch (error) {
-//     res.status(400).send({ error: "Failed to save data", details: error });
-//   }
-// });
-// POST - Delete previous and save new layout data
 app.post("/api/layout", async (req, res) => {
   try {
+    const { cardlayout, category } = req.body;
+
+    // Helper function to validate fontSize
+    const isValidFontSize = (fontSize) => fontSize >= 16 && fontSize <= 30;
+
+    // Validate fontSize for each component
+    if (
+      (cardlayout?.fontSize && !isValidFontSize(cardlayout.fontSize)) ||
+      (category?.fontSize && !isValidFontSize(category.fontSize))
+    ) {
+      return res.status(400).send({
+        error: "Validation error",
+        message: "fontSize must be between 16 and 30",
+      });
+    }
+
+    // Proceed to replace data
     await LayoutData.deleteMany(); // Delete all existing documents
     const data = new LayoutData(req.body);
     await data.save();
@@ -43,6 +47,19 @@ app.post("/api/layout", async (req, res) => {
     res.status(400).send({ error: "Failed to replace data", details: error });
   }
 });
+
+// app.post("/api/layout", async (req, res) => {
+//   try {
+//     await LayoutData.deleteMany(); // Delete all existing documents
+//     const data = new LayoutData(req.body);
+//     await data.save();
+//     res
+//       .status(201)
+//       .send({ message: "Old data deleted and new data saved", data });
+//   } catch (error) {
+//     res.status(400).send({ error: "Failed to replace data", details: error });
+//   }
+// });
 
 app.post("/api/web", async (req, res) => {
   try {
