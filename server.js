@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const LayoutData = require("./model/layout");
-
+const { AltWebModel } = require("./model/web");
 const app = express();
 const port = 3000;
 
@@ -44,6 +44,20 @@ app.post("/api/layout", async (req, res) => {
   }
 });
 
+app.post("/api/web", async (req, res) => {
+  try {
+    await AltWebModel.deleteMany(); // Clear the alternate collection
+    const data = new AltWebModel(req.body);
+    await data.save();
+    res.status(201).send({
+      message: "Old data deleted and new data saved to alternate_web",
+      data,
+    });
+  } catch (error) {
+    res.status(400).send({ error: "Failed to replace data", details: error });
+  }
+});
+
 // GET - Retrieve all layout data
 // app.get("/api/layout", async (req, res) => {
 //   try {
@@ -56,6 +70,14 @@ app.post("/api/layout", async (req, res) => {
 app.get("/api/layout", async (req, res) => {
   try {
     const data = await LayoutData.findOne();
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send({ error: "Failed to retrieve data" });
+  }
+});
+app.get("/api/web", async (req, res) => {
+  try {
+    const data = await AltWebModel.findOne();
     res.status(200).send(data);
   } catch (error) {
     res.status(500).send({ error: "Failed to retrieve data" });
